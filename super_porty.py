@@ -7,33 +7,40 @@ def scan_port(ip, port):
         s.settimeout(1)
         try:
             s.connect((str(ip), port))
-            return f'Port {port} is open on {ip}'
+            return port
         except:
             return None
 
-def scan_network(ip_range, port):
+def scan_network(ip_input, ports):
     try:
-        network = ipaddress.ip_network(ip_range)
+        if '/' in ip_input:  # If the input is an IP range
+            network = ipaddress.ip_network(ip_input)
+            ips = network.hosts()
+        else:  # If the input is a single IP address
+            ips = [ipaddress.ip_address(ip_input)]
     except ValueError as e:
-        return f'Error with IP range: {e}'
+        return f'Error with IP input: {e}'
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
-        future_to_ip = {executor.submit(scan_port, ip, port): ip for ip in network.hosts()}
-        for future in concurrent.futures.as_completed(future_to_ip):
-            result = future.result()
-            if result is not None:
-                print(result)
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for port in ports:
+            future_to_ip = {executor.submit(scan_port, ip, port): ip for ip in ips}
+            for future in concurrent.futures.as_completed(future_to_ip):
+                ip = future_to_ip[future]
+                result = future.result()
+                if result is not None:
+                    print(f'Port {result} is open on {ip}')
 
-ip_range = input("Enter the IP range in CIDR format (e.g., '192.168.1.0/24'): ")
-port = input("Enter the port number to check (e.g., 80) or 'all' to check all well-known ports: ")
+if __name__ == '__main__':
+    ip_input = input("Enter the IP address or IP range in CIDR format (e.g., '192.168.1.0/24' or '192.168.1.1'): ")
+    port_input = input("Enter the port number to check (e.g., 80) or 'all' to check all well-known ports: ")
 
-if port.lower() == 'all':
-    for port in range(1024):
-        scan_network(ip_range, port)
-else:
-    try:
-        port = int(port)
-        scan_network(ip_range, port)
-    except ValueError as e:
-        print(f'Error with port number: {e}')
+    if port_input.lower() == 'all':
+        ports = range(1024)
+    else:
+        try:
+            ports = [int(port_input)]
+        except ValueError as e:
+            print(f'Error with port number: {e}')
+            ports = []
 
+    scan_network(ip_input, ports)
