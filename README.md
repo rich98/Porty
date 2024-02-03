@@ -1,4 +1,4 @@
-Super_porty
+Super_porty supports scanning for single IP addresses and for ranges
 
 This is a Python script that scans a network to see if certain ports are open on the devices in that network. Here’s a breakdown of what it does:
 
