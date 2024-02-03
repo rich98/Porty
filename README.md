@@ -1,3 +1,5 @@
+Super_porty
+
 This is a Python script that scans a network to see if certain ports are open on the devices in that network. Here’s a breakdown of what it does:
 
 Import necessary modules: The script starts by importing the necessary Python modules. socket is used for network communications, ipaddress is used for handling and manipulating IPv4 and IPv6 addresses and networks, and concurrent.futures is used for creating a pool of worker threads.
