@@ -1,4 +1,4 @@
-ket
+import socket
 import ipaddress
 import concurrent.futures
 import tkinter as tk
