@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import messagebox
 import os
 import random
+import nmap
 
 os.system('cls' if os.name == 'nt' else 'clear')  # Clear the console screen
 
@@ -20,13 +21,15 @@ print("*            By Rich98                 *")
 print("****************************************" + ENDC)
 
 def scan_port(ip, port):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.settimeout(3)  # Hardcode timeout to 3 seconds
+    nm = nmap.PortScanner()
+    res = nm.scan(str(ip), str(port))
+    if res['scan']:
         try:
-            s.connect((str(ip), port))
-            return port
-        except:
-            return None
+            os_info = res['scan'][str(ip)]['osmatch'][0]
+            return port, os_info
+        except IndexError:
+            return port, 'OS could not be identified'
+    return None
 
 def is_active(ip):
     # Use the ping command to check if the IP is active
