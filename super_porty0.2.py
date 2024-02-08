@@ -28,13 +28,18 @@ def scan_port(ip, port):
         except:
             return None
 
+def is_active(ip):
+    # Use the ping command to check if the IP is active
+    response = os.system("ping -c 1 -w2 " + str(ip) + " > /dev/null 2>&1")
+    return response == 0
+
 def scan_network(ip_input, ports):
     try:
         if '/' in ip_input:  # If the input is an IP range
             network = ipaddress.ip_network(ip_input)
-            ips = network.hosts()
+            ips = [ip for ip in network.hosts() if is_active(ip)]
         else:  # If the input is a single IP address
-            ips = [ipaddress.ip_address(ip_input)]
+            ips = [ipaddress.ip_address(ip_input)] if is_active(ip_input) else []
     except ValueError as e:
         return f'Error with IP input: {e}'
 
