@@ -43,13 +43,15 @@ def scan_network(ip_input, ports):
     except ValueError as e:
         return f'Error with IP input: {e}'
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:  # Use ThreadPoolExecutor
-        future_to_ip = {executor.submit(scan_port, ip, port): (ip, port) for ip in ips for port in ports}  # Scan ports concurrently
-        for future in concurrent.futures.as_completed(future_to_ip):
-            ip, port = future_to_ip[future]
-            result = future.result()
-            if result is not None:
-                print(f'Port {result} is open on {ip}')
+    with open('port_scan_results.txt', 'w') as f:
+        with concurrent.futures.ThreadPoolExecutor() as executor:  # Use ThreadPoolExecutor
+            future_to_ip = {executor.submit(scan_port, ip, port): (ip, port) for ip in ips for port in ports}  # Scan ports concurrently
+            for future in concurrent.futures.as_completed(future_to_ip):
+                ip, port = future_to_ip[future]
+                result = future.result()
+                if result is not None:
+                    print(f'Port {result} is open on {ip}')  # Print to console
+                    f.write(f'Port {result} is open on {ip}\n')  # Write to file
 
 def main():
     ip_input = input("Enter the IP address or IP range in CIDR format (e.g., '192.168.1.0/24' or '192.168.1.1'): ")
