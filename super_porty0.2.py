@@ -38,7 +38,7 @@ def is_active(ip):
     
 def scan_network(ip_input, ports):
     try:
-        if ' to ' in ip_input:  # If the input is an IP range in the format 'IP1 - IP2'
+        if ' - ' in ip_input:  # If the input is an IP range in the format 'IP1 - IP2'
             ip_start, ip_end = [ipaddress.ip_address(ip) for ip in ip_input.split(' - ')]
             ips = [ipaddress.ip_address(str(ip)) for ip in range(int(ip_start), int(ip_end)+1) if is_active(ip)]
         elif '/' in ip_input:  # If the input is an IP range in CIDR format
