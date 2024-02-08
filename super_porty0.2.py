@@ -35,10 +35,13 @@ def is_active(ip):
     # Use the ping command to check if the IP is active
     response = os.system("ping -c 1 -w2 " + str(ip) + " > /dev/null 2>&1")
     return response == 0
-
+    
 def scan_network(ip_input, ports):
     try:
-        if '/' in ip_input:  # If the input is an IP range
+        if ' to ' in ip_input:  # If the input is an IP range in the format 'IP1 to IP2'
+            ip_start, ip_end = [ipaddress.ip_address(ip) for ip in ip_input.split(' to ')]
+            ips = [ipaddress.ip_address(str(ip)) for ip in range(int(ip_start), int(ip_end)+1) if is_active(ip)]
+        elif '/' in ip_input:  # If the input is an IP range in CIDR format
             network = ipaddress.ip_network(ip_input)
             ips = [ip for ip in network.hosts() if is_active(ip)]
         else:  # If the input is a single IP address
