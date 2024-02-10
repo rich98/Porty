@@ -5,61 +5,55 @@ import tkinter as tk
 from tkinter import messagebox
 import os
 import random
-import nmap
+import pyfiglet
+from termcolor import colored
 
-os.system('cls' if os.name == 'nt' else 'clear')  # Clear the console screen
 
-# Define color codes
-YELLOW = '\033[93m'
-ENDC = '\033[0m'
+os.system('cls' if os.name == 'nt' else 'clear')
 
-# Print the banner
-print(YELLOW + "****************************************")
-print("*                                      *")
-print("*            SUPER PORTY               *")
-print("*            By Rich98                 *")
-print("****************************************" + ENDC)
+text = "Super Porty"
+
+
+ascii_banner = pyfiglet.figlet_format(text)
+
+
+color = "red"  
+
+
+print(colored(ascii_banner, color))
+
 
 def scan_port(ip, port):
-    nm = nmap.PortScanner()
-    res = nm.scan(str(ip), str(port))
-    if res['scan']:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(3)  
         try:
-            os_info = res['scan'][str(ip)]['osmatch'][0]
-            return port, os_info
-        except IndexError:
-            return port, 'OS could not be identified'
-    return None
+            s.connect((str(ip), port))  
+            return port  
+        except:
+            return None  
 
-def is_active(ip):
-    # Use the ping command to check if the IP is active
-    response = os.system("ping -c 1 -w2 " + str(ip) + " > /dev/null 2>&1")
-    return response == 0
-    
+
 def scan_network(ip_input, ports):
     try:
-        if ' - ' in ip_input:  # If the input is an IP range in the format 'IP1 - IP2'
-            ip_start, ip_end = [ipaddress.ip_address(ip) for ip in ip_input.split(' - ')]
-            ips = [ipaddress.ip_address(str(ip)) for ip in range(int(ip_start), int(ip_end)+1) if is_active(ip)]
-        elif '/' in ip_input:  # If the input is an IP range in CIDR format
+        if '/' in ip_input: 
             network = ipaddress.ip_network(ip_input)
-            ips = [ip for ip in network.hosts() if is_active(ip)]
-        else:  # If the input is a single IP address
-            ips = [ipaddress.ip_address(ip_input)] if is_active(ip_input) else []
+            ips = network.hosts()  
+        else:  
+            ips = [ipaddress.ip_address(ip_input)]
     except ValueError as e:
         return f'Error with IP input: {e}'
 
-    with open('port_scan_results.txt', 'w') as f:
-        with concurrent.futures.ThreadPoolExecutor() as executor:  # Use ThreadPoolExecutor
-            future_to_ip = {executor.submit(scan_port, ip, port): (ip, port) for ip in ips for port in ports}  # Scan ports concurrently
-            for future in concurrent.futures.as_completed(future_to_ip):
-                ip, port = future_to_ip[future]
-                result = future.result()
-                if result is not None:
-                    print(f'Port {result} is open on {ip}')  # Print to console
-                    f.write(f'Port {result} is open on {ip}\n')  # Write to file
+
+    with concurrent.futures.ThreadPoolExecutor(60) as executor:
+        future_to_ip = {executor.submit(scan_port, ip, port): (ip, port) for ip in ips for port in ports}
+        for future in concurrent.futures.as_completed(future_to_ip):
+            ip, port = future_to_ip[future]
+            result = future.result()
+            if result is not None:
+                print(f'Port {result} is open on {ip}')  
 
 def main():
+
     ip_input = input("Enter the IP address or IP range in CIDR format (e.g., '192.168.1.0/24' or '192.168.1.1'): ")
     port_input = input("Enter the port number to check (e.g., 80), 'email' to check all default email ports, 'db' to check all default database ports, 'ads' to check all default LDAP and Active Directory ports, 'web' to check all default web and major web service ports, 'well-known' to check well-known ports, 'smb' to check all SMB ports, 'infra' to check infrastructure ports, 'random' to check 20 random ports, or 'all' to check all 65,535 ports: ")
 
@@ -74,11 +68,11 @@ def main():
     elif port_input.lower() == 'web':
         ports = [80, 443]
     elif port_input.lower() == 'smb':
-        ports = [445, 139, 135]  # Default SMB & RPC ports
+        ports = [445, 139, 135]  
     elif port_input.lower() == 'infra':
-        ports = [53, 67, 68, 161, 162]  # Default DNS, DHCP, SNMP ports
+        ports = [53, 67, 68, 161, 162] 
     elif port_input.lower() == 'random':
-        ports = random.sample(range(1, 65536), 20)  # Randomly select 20 ports from 1 to 65535
+        ports = random.sample(range(1, 65536), 20)  
     elif port_input.lower() == 'all':
         root = tk.Tk()
         root.withdraw()
@@ -88,7 +82,7 @@ def main():
         else:
             print("Scanning cancelled.")
             root.destroy()
-            os.system('cls' if os.name == 'nt' else 'clear')  # Clear the console screen
+            os.system('cls' if os.name == 'nt' else 'clear')  
             return main()
         root.destroy()
     else:
@@ -98,7 +92,8 @@ def main():
             print(f'Error with port number: {e}')
             ports = []
 
-    scan_network(ip_input, ports)  # Pass timeout to scan_network
+    scan_network(ip_input, ports)  
 
 if __name__ == '__main__':
     main()
+
