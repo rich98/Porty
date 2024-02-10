@@ -43,6 +43,8 @@ def scan_network(ip_input, ports):
     except ValueError as e:
         return f'Error with IP input: {e}'
 
+    # Initialize a set to store the IPs where an open port is found
+    ips_with_open_ports = set()
 
     with concurrent.futures.ThreadPoolExecutor(60) as executor:
         future_to_ip = {executor.submit(scan_port, ip, port): (ip, port) for ip in ips for port in ports}
@@ -50,7 +52,12 @@ def scan_network(ip_input, ports):
             ip, port = future_to_ip[future]
             result = future.result()
             if result is not None:
-                print(f'Port {result} is open on {ip}')  
+                print(f'Port {result} is open on {ip}')
+                # Add the IP to the set if an open port is found
+                ips_with_open_ports.add(ip)
+
+    # Print the total number of IPs where an open port was found
+    print(f'Total IPs where an open port was found: {len(ips_with_open_ports)}')
 
 def main():
 
@@ -96,4 +103,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
