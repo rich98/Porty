@@ -7,7 +7,7 @@ import os
 import random
 import pyfiglet
 from termcolor import colored
-
+import nmap
 
 os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -35,7 +35,12 @@ def scan_port(ip, port):
 
 def scan_network(ip_input, ports):
     try:
-        if '/' in ip_input: 
+        if '-' in ip_input:  # Check if the input is a range
+            ip_start, ip_end = ip_input.split('-')
+            start = ipaddress.IPv4Address(ip_start)
+            end = ipaddress.IPv4Address(ip_end)
+            ips = (ipaddress.IPv4Address(ip) for ip in range(int(start), int(end) + 1))
+        elif '/' in ip_input: 
             network = ipaddress.ip_network(ip_input)
             ips = network.hosts()  
         else:  
@@ -60,9 +65,21 @@ def scan_network(ip_input, ports):
     print(f'Total IPs where an open port was found: {len(ips_with_open_ports)}')
 
 def main():
-
-    ip_input = input("Enter the IP address or IP range in CIDR format (e.g., '192.168.1.0/24' or '192.168.1.1'): ")
-    port_input = input("Enter the port number to check (e.g., 80), 'email' to check all default email ports, 'db' to check all default database ports, 'ads' to check all default LDAP and Active Directory ports, 'web' to check all default web and major web service ports, 'well-known' to check well-known ports, 'smb' to check all SMB ports, 'infra' to check infrastructure ports, 'random' to check 20 random ports, or 'all' to check all 65,535 ports: ")
+    print(colored("Enter the IP address or IP range", 'green'))
+    print(colored("Enter IP range in this format 192.168.0.1-192.168.0.254", 'green'))
+    print(colored("Enter the IP address or IP range in CIDR format (e.g., '192.168.1.0/24", 'green'))
+    ip_input = input("Enter your info here - ")
+    print(colored("Enter a single port number (e.g) 80", 'green'))
+    print(colored("Entering 'email' to scan these ports 25, 465, 587, 110, 995, 143, 993", 'green'))
+    print(colored("Entering 'db' to scan these ports 87, 110, 995, 143, 993", 'green'))
+    print(colored("Entering 'ads' to scan these ports 389, 636, 3268, 3269", 'green'))
+    print(colored("Entering 'web' to scan these ports 80, 443", 'green')) 
+    print(colored("entering 'smb' to scan these ports 445, 139, 135", 'green'))
+    print(colored("To use a random selection of ports enter 'random'", 'green'))
+    print(colored("To scan all ports 0 to 1023 enter 'well-known'", 'red'))
+    print(colored("To scan all 65,535 ports enter 'all'", 'red'))
+    port_input = input("Enter your choice: ")
+    
 
     if port_input.lower() == 'well-known':
         ports = range(1024)
@@ -75,7 +92,7 @@ def main():
     elif port_input.lower() == 'web':
         ports = [80, 443]
     elif port_input.lower() == 'smb':
-        ports = [445, 139, 135]  
+        ports = [445, 139, 135] 
     elif port_input.lower() == 'infra':
         ports = [53, 67, 68, 161, 162] 
     elif port_input.lower() == 'random':
