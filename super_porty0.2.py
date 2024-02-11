@@ -8,20 +8,15 @@ import random
 import pyfiglet
 from termcolor import colored
 
-
 os.system('cls' if os.name == 'nt' else 'clear')
 
 text = "Super Porty"
 
-
 ascii_banner = pyfiglet.figlet_format(text)
-
 
 color = "red"  
 
-
 print(colored(ascii_banner, color))
-
 
 def scan_port(ip, port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -69,15 +64,16 @@ def main():
     print(colored("Enter IP range in this format 192.168.0.1-192.168.0.254", 'green'))
     print(colored("Enter the IP address or IP range in CIDR format (e.g., '192.168.1.0/24", 'green'))
     ip_input = input("Enter your info here - ")
-    print(colored("Enter a single port number (e.g) 80", 'green'))
-    print(colored("Enter 'email' to scan these ports 25, 465, 587, 110, 995, 143, 993", 'green'))
-    print(colored("Enter 'ads' to scan these ports 389, 636, 3268, 3269", 'green'))
-    print(colored("Enter 'web' to scan these ports 80, 443", 'green')) 
-    print(colored("Enter 'smb' to scan these ports 445, 139, 135", 'green'))
-    print(colored("To use a random selection of ports enter 'random'", 'green'))
-    print(colored("To scan all ports 0 to 1023 enter 'well-known'", 'red'))
-    print(colored("To scan all 65,535 ports enter 'all'", 'red'))
+    print(colored('Enter a single port number (e.g)', 'green') + colored('80', 'yellow'))
+    print(colored('Enter ', 'green') + colored('email ', 'yellow') + colored('to scan these ports 25, 465, 587, 110, 995, 143, 993', 'green'))
+    print(colored('Enter ', 'green') + colored('ads ', 'yellow') + colored('to scan these ports 389, 636, 3268, 3269', 'green'))
+    print(colored('Enter ', 'green') + colored('web ', 'yellow') + colored('to scan these ports 80, 443', 'green')) 
+    print(colored('Enter ', 'green') + colored('smb ', 'yellow') + colored('to scan these ports 445, 139, 135', 'green'))
+    print(colored('To scan 200 random ports enter ', 'green') + colored('random ', 'yellow') + colored('Great for network monitoring practice', 'green'))
+    print(colored('Enter ', 'green') + colored('well-known ', 'red') + colored('to scan ports 0-1023', 'green'))
+    print(colored('To start a 65,535 port scan enter ', 'green') + colored('all ', 'red') + colored('Great for network monitoring practice', 'green'))
     port_input = input("Enter your choice: ")
+    
 
     if port_input.lower() == 'well-known':
         ports = range(1024)
@@ -94,7 +90,7 @@ def main():
     elif port_input.lower() == 'infra':
         ports = [53, 67, 68, 161, 162] 
     elif port_input.lower() == 'random':
-        ports = random.sample(range(1, 65536), 20)  
+        ports = random.sample(range(1, 65536), 200)  
     elif port_input.lower() == 'all':
         root = tk.Tk()
         root.withdraw()
