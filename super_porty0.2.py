@@ -59,7 +59,7 @@ def scan_network(ip_input, ports):
     print(f'Total IPs where an open port was found: {len(ips_with_open_ports)}')
 
 def main():
-    while True:  # Start of the loop
+
         print(colored("Enter the IP address or IP range", 'green'))
         print(colored("Enter IP range in this format 192.168.0.1-192.168.0.254", 'green'))
         print(colored("Enter the IP address or IP range in CIDR format (e.g., '192.168.1.0/24", 'green'))
@@ -108,11 +108,6 @@ def main():
             except ValueError as e:
                 print(f'Error with port number: {e}')
                 ports = []
-
-        run_again = input("Would you like to run again? (yes/no): ")
-        if run_again.lower() != 'yes':
-            break  # If the user doesn't want to run again, break the loop
-        os.system('cls' if os.name == 'nt' else 'clear')
         
         scan_network(ip_input, ports)
 
