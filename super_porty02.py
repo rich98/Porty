@@ -113,8 +113,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-        
-        scan_network(ip_input, ports)
-
-if __name__ == '__main__':
-    main()
