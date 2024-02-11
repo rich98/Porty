@@ -17,7 +17,7 @@ ascii_banner = pyfiglet.figlet_format(text)
 color = "red"
 
 print(colored(ascii_banner, color))
-print("By Rich98  https://github.com/rich98/Porty ")
+print("By Rich98 super_potty03 https://github.com/rich98/Porty ")
 
 
 def scan_port(ip, port, protocol='both'):
