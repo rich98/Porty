@@ -7,7 +7,7 @@ import os
 import random
 import pyfiglet
 from termcolor import colored
-import nmap
+
 
 os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -70,16 +70,14 @@ def main():
     print(colored("Enter the IP address or IP range in CIDR format (e.g., '192.168.1.0/24", 'green'))
     ip_input = input("Enter your info here - ")
     print(colored("Enter a single port number (e.g) 80", 'green'))
-    print(colored("Entering 'email' to scan these ports 25, 465, 587, 110, 995, 143, 993", 'green'))
-    print(colored("Entering 'db' to scan these ports 87, 110, 995, 143, 993", 'green'))
-    print(colored("Entering 'ads' to scan these ports 389, 636, 3268, 3269", 'green'))
-    print(colored("Entering 'web' to scan these ports 80, 443", 'green')) 
-    print(colored("entering 'smb' to scan these ports 445, 139, 135", 'green'))
+    print(colored("Enter 'email' to scan these ports 25, 465, 587, 110, 995, 143, 993", 'green'))
+    print(colored("Enter 'ads' to scan these ports 389, 636, 3268, 3269", 'green'))
+    print(colored("Enter 'web' to scan these ports 80, 443", 'green')) 
+    print(colored("Enter 'smb' to scan these ports 445, 139, 135", 'green'))
     print(colored("To use a random selection of ports enter 'random'", 'green'))
     print(colored("To scan all ports 0 to 1023 enter 'well-known'", 'red'))
     print(colored("To scan all 65,535 ports enter 'all'", 'red'))
     port_input = input("Enter your choice: ")
-    
 
     if port_input.lower() == 'well-known':
         ports = range(1024)
@@ -92,7 +90,7 @@ def main():
     elif port_input.lower() == 'web':
         ports = [80, 443]
     elif port_input.lower() == 'smb':
-        ports = [445, 139, 135] 
+        ports = [445, 139, 135]  
     elif port_input.lower() == 'infra':
         ports = [53, 67, 68, 161, 162] 
     elif port_input.lower() == 'random':
