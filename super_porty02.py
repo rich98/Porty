@@ -17,7 +17,7 @@ ascii_banner = pyfiglet.figlet_format(text)
 color = "red"
 
 print(colored(ascii_banner, color))
-
+print("By Rich98  https://github.com/rich98/Porty ")
 def scan_port(ip, port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.settimeout(3)
@@ -108,6 +108,11 @@ def main():
             except ValueError as e:
                 print(f'Error with port number: {e}')
                 ports = []
+        
+        scan_network(ip_input, ports)
+
+if __name__ == '__main__':
+    main()
         
         scan_network(ip_input, ports)
 
