@@ -14,19 +14,18 @@ text = "Super Porty"
 
 ascii_banner = pyfiglet.figlet_format(text)
 
-color = "red"  
+color = "red"
 
 print(colored(ascii_banner, color))
 
 def scan_port(ip, port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.settimeout(3)  
+        s.settimeout(3)
         try:
-            s.connect((str(ip), port))  
-            return port  
+            s.connect((str(ip), port))
+            return port
         except:
-            return None  
-
+            return None
 
 def scan_network(ip_input, ports):
     try:
@@ -35,10 +34,10 @@ def scan_network(ip_input, ports):
             start = ipaddress.IPv4Address(ip_start)
             end = ipaddress.IPv4Address(ip_end)
             ips = (ipaddress.IPv4Address(ip) for ip in range(int(start), int(end) + 1))
-        elif '/' in ip_input: 
+        elif '/' in ip_input:
             network = ipaddress.ip_network(ip_input)
-            ips = network.hosts()  
-        else:  
+            ips = network.hosts()
+        else:
             ips = [ipaddress.ip_address(ip_input)]
     except ValueError as e:
         return f'Error with IP input: {e}'
@@ -60,57 +59,62 @@ def scan_network(ip_input, ports):
     print(f'Total IPs where an open port was found: {len(ips_with_open_ports)}')
 
 def main():
-    print(colored("Enter the IP address or IP range", 'green'))
-    print(colored("Enter IP range in this format 192.168.0.1-192.168.0.254", 'green'))
-    print(colored("Enter the IP address or IP range in CIDR format (e.g., '192.168.1.0/24", 'green'))
-    ip_input = input("Enter your info here - ")
-    print(colored('Enter a single port number (e.g)', 'green') + colored('80', 'yellow'))
-    print(colored('Enter ', 'green') + colored('email ', 'yellow') + colored('to scan these ports 25, 465, 587, 110, 995, 143, 993', 'green'))
-    print(colored('Enter ', 'green') + colored('ads ', 'yellow') + colored('to scan these ports 389, 636, 3268, 3269', 'green'))
-    print(colored('Enter ', 'green') + colored('web ', 'yellow') + colored('to scan these ports 80, 443', 'green')) 
-    print(colored('Enter ', 'green') + colored('smb ', 'yellow') + colored('to scan these ports 445, 139, 135', 'green'))
-    print(colored('To scan 200 random ports enter ', 'green') + colored('random ', 'yellow') + colored('Great for network monitoring practice', 'green'))
-    print(colored('Enter ', 'green') + colored('well-known ', 'red') + colored('to scan ports 0-1023', 'green'))
-    print(colored('To start a 65,535 port scan enter ', 'green') + colored('all ', 'red') + colored('Great for network monitoring practice', 'green'))
-    port_input = input("Enter your choice: ")
-    
+    while True:  # Start of the loop
+        print(colored("Enter the IP address or IP range", 'green'))
+        print(colored("Enter IP range in this format 192.168.0.1-192.168.0.254", 'green'))
+        print(colored("Enter the IP address or IP range in CIDR format (e.g., '192.168.1.0/24", 'green'))
+        ip_input = input("Enter your info here - ")
+        print(colored('Enter a single port number (e.g)', 'green') + colored('80', 'yellow'))
+        print(colored('Enter ', 'green') + colored('email ', 'yellow') + colored('to scan these ports 25, 465, 587, 110, 995, 143, 993', 'green'))
+        print(colored('Enter ', 'green') + colored('ads ', 'yellow') + colored('to scan these ports 389, 636, 3268, 3269', 'green'))
+        print(colored('Enter ', 'green') + colored('web ', 'yellow') + colored('to scan these ports 80, 443', 'green'))
+        print(colored('Enter ', 'green') + colored('smb ', 'yellow') + colored('to scan these ports 445, 139, 135', 'green'))
+        print(colored('To scan 200 random ports enter ', 'green') + colored('random ', 'yellow') + colored('Great for network monitoring practice', 'green'))
+        print(colored('Enter ', 'green') + colored('well-known ', 'red') + colored('to scan ports 0-1023', 'green'))
+        print(colored('To start a 65,535 port scan enter ', 'green') + colored('all ', 'red') + colored('Great for network monitoring practice', 'green'))
+        port_input = input("Enter your choice: ")
 
-    if port_input.lower() == 'well-known':
-        ports = range(1024)
-    elif port_input.lower() == 'email':
-        ports = [25, 465, 587, 110, 995, 143, 993]
-    elif port_input.lower() == 'db':
-        ports = [1433, 3306, 5432, 1521, 27017]
-    elif port_input.lower() == 'ads':
-        ports = [389, 636, 3268, 3269]
-    elif port_input.lower() == 'web':
-        ports = [80, 443]
-    elif port_input.lower() == 'smb':
-        ports = [445, 139, 135]  
-    elif port_input.lower() == 'infra':
-        ports = [53, 67, 68, 161, 162] 
-    elif port_input.lower() == 'random':
-        ports = random.sample(range(1, 65536), 200)  
-    elif port_input.lower() == 'all':
-        root = tk.Tk()
-        root.withdraw()
-        MsgBox = tk.messagebox.askquestion ('Are you really sure?','Are you sure you want to scan all 65,535 ports?',icon = 'warning')
-        if MsgBox == 'yes':
-            ports = range(65535)
-        else:
-            print("Scanning cancelled.")
+        if port_input.lower() == 'well-known':
+            ports = range(1024)
+        elif port_input.lower() == 'email':
+            ports = [25, 465, 587, 110, 995, 143, 993]
+        elif port_input.lower() == 'db':
+            ports = [1433, 3306, 5432, 1521, 27017]
+        elif port_input.lower() == 'ads':
+            ports = [389, 636, 3268, 3269]
+        elif port_input.lower() == 'web':
+            ports = [80, 443]
+        elif port_input.lower() == 'smb':
+            ports = [445, 139, 135]
+        elif port_input.lower() == 'infra':
+            ports = [53, 67, 68, 161, 162]
+        elif port_input.lower() == 'random':
+            ports = random.sample(range(1, 65536), 200)
+        elif port_input.lower() == 'all':
+            root = tk.Tk()
+            root.withdraw()
+            MsgBox = tk.messagebox.askquestion('Are you really sure?', 'Are you sure you want to scan all 65,535 ports?', icon='warning')
+            if MsgBox == 'yes':
+                ports = range(65535)
+            else:
+                print("Scanning cancelled.")
+                root.destroy()
+                os.system('cls' if os.name == 'nt' else 'clear')
+                return main()
             root.destroy()
-            os.system('cls' if os.name == 'nt' else 'clear')  
-            return main()
-        root.destroy()
-    else:
-        try:
-            ports = [int(port_input)]
-        except ValueError as e:
-            print(f'Error with port number: {e}')
-            ports = []
+        else:
+            try:
+                ports = [int(port_input)]
+            except ValueError as e:
+                print(f'Error with port number: {e}')
+                ports = []
 
-    scan_network(ip_input, ports)  
+        run_again = input("Would you like to run again? (yes/no): ")
+        if run_again.lower() != 'yes':
+            break  # If the user doesn't want to run again, break the loop
+        os.system('cls' if os.name == 'nt' else 'clear')
+        
+        scan_network(ip_input, ports)
 
 if __name__ == '__main__':
     main()
