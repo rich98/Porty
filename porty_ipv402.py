@@ -18,6 +18,8 @@ color = "red"
 
 print(colored(ascii_banner, color))
 print("By Rich98  https://github.com/rich98/Porty ")
+print("Licensed under the Apache License, Version 2.0 ")
+print("")
 def scan_port(ip, port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.settimeout(3)
