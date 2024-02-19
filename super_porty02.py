@@ -10,7 +10,7 @@ from termcolor import colored
 
 os.system('cls' if os.name == 'nt' else 'clear')
 
-text = "Super Porty"
+text = "Porty IPv4"
 
 ascii_banner = pyfiglet.figlet_format(text)
 
