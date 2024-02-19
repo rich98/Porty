@@ -71,6 +71,7 @@ def main():
         print(colored('Enter ', 'green') + colored('remote ', 'yellow') + colored('to scan these ports 3389, 5900', 'green'))
         print(colored('Enter ', 'green') + colored('smb ', 'yellow') + colored('to scan these ports 445, 139, 135', 'green'))
         print(colored('Enter ', 'green') + colored('xbox ', 'yellow') + colored('to scan these ports 88, 3074, 53, 80, 500, 3544, 4500', 'green'))
+        print(colored('Enter ', 'green') + colored('ps5 ', 'yellow') + colored('to scan these ports 88, 3074, 443, 3478, 3479, 3480', 'green'))
         print(colored('To scan 200 random ports enter ', 'green') + colored('random ', 'yellow') + colored('Great for network monitoring practice', 'green'))
         print(colored('Enter ', 'green') + colored('well-known ', 'red') + colored('to scan ports 0-1023', 'green'))
         print(colored('Enter ', 'green') + colored('services ', 'red') + colored('checks the ports found in the MS Services file', 'green'))
@@ -85,6 +86,8 @@ def main():
             ports = [1433, 3306, 5432, 1521, 27017]
         elif port_input.lower() == 'xbox':
             ports = [88, 3074, 53, 80, 500, 3544, 4500]
+        elif port_input.lower() == 'ps5':
+            ports = [88, 3074, 443, 3478, 3479, 3400]
         elif port_input.lower() == 'ads':
             ports = [389, 636, 3268, 3269]
         elif port_input.lower() == 'web':
